@@ -8,9 +8,9 @@ Thought I'd try to build my own Game Engine to learn from all the walls I'll hit
 The structure is quite rigid at the moment, and looks something like
  - /index.html - The entry point for the game
  - /game - Game files folder
- - - /game/main.js - Main game logic entry point, exports update()
+   - /game/main.js - Main game logic entry point, exports update()
  - /engine - Engine files folder
- - - /engine/engine.js - Game engine entry point. Imports /game/main.js
+   - /engine/engine.js - Game engine entry point. Imports /game/main.js
 
 I've just started, so all it can be used for right now is
  - Load a basic scene that sets the canvas context and loads game objects into the scene
