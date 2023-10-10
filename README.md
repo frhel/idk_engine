@@ -11,6 +11,8 @@ The structure is quite rigid at the moment, and looks something like
    - /game/main.js - Main game logic entry point, exports update()
  - /engine - Engine files folder
    - /engine/engine.js - Game engine entry point. Imports /game/main.js
+  
+TODO: Create a loader that can take arguments for what to load and when/where.
 
 I've just started, so all it can be used for right now is
  - Load a basic scene that sets the canvas context and loads game objects into the scene
