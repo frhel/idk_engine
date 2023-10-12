@@ -18,8 +18,9 @@ class Scene {
         this.gameObjects = [];
 
         this.frame = 0;
+        this.time_to_frame = 0;
         this.frame_time = 0;
-        this.fps = 60;
+        this.fps = 30;
 
         return this;
     }
