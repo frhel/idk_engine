@@ -44,8 +44,13 @@ class GameObject {
     }
 
     /**
-     * Move the sprite in a direction
+     * @function move
+     * @description Moves the game object in the direction specified
+     * @memberof GameObject
      * @param {String} dir - 'u', 'd', 'l', 'r' for up, down, left, right
+     * @todo Add a check to make sure the direction is valid
+     * @todo Add a check to make sure the game object is not already moving in that direction
+     * @todo Add a check to make sure the game object is not stationary
      */
     move(dir) {
         switch (dir) {

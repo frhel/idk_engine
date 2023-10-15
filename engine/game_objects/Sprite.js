@@ -24,29 +24,53 @@ class Sprite extends GameObject {
         
         this.base_animation_speed = props.base_animation_speed || 5;
         this.animations = props.animations;
-
-        this.generate_frame_list();
-
-        this.set_animation("idle");
+        this.curr_animation = props.curr_animation || null;
+        this.animations_list = this.animations.map((anim) => anim.name);
+        this.generate_frame_list();        
+        this.set_animation(this.curr_animation);
 
         return this;
     }
 
-    get_animation_list() {
-        return this.animations.map((anim) => anim.name);
-    }
-
+    /**
+     * @function set_animation
+     * @description Set the current animation for the sprite
+     * @param {String} animation - The name of the animation to set
+     * @memberof Sprite
+     * @todo Add a check to make sure the animation is not already set
+     */
     set_animation(animation) {
-        if (!this.get_animation_list().includes(animation)) {
-            return;
-        }
-
+        if (animation == null) {console.error("No animation provided. Check that props.curr_animation is set in child object"); return;}
+        if (!this.animations_list.includes(animation)) return;
         this.curr_animation = this.animations.filter((anim) => anim.name === animation)[0];
         this.curr_animation.speed = this.curr_animation.speed || this.base_animation_speed;        
     }
 
+    /**
+     * @function cycle_animation
+     * @description Cycle to the next animation in the list
+     * @param {String} dir - The direction to cycle the animation. 'next' or 'prev'
+     * @memberof Sprite
+     * @todo Add a check to make sure the animation list is not empty
+     */
+    cycle_animation(dir) {        
+        let mod = dir === 'next' ? 1 : -1;
+        let next_animation = (this.curr_animation.index + mod) % this.animations_list.length < 0 
+                             ? this.animations_list.length - 1 
+                             : (this.curr_animation.index + mod) % this.animations_list.length;
+        this.set_animation(this.animations_list[next_animation]);
+    }
+
+    /**
+     * @function generate_frame_list
+     * @description Generate a list of frames for each animation
+     * @memberof Sprite
+     * @todo Add a check to make sure the animation list is not empty
+     * @todo Add a check to make sure the frames property is not already set
+     * @todo Save frame lists to the scene so that we don't have to generate them for each sprite of the same type
+     */
     generate_frame_list() {
-        this.get_animation_list().forEach((_, idx) => {
+        this.animations_list.forEach((_, idx) => {
             let frames = {
                 loc: [], // {x, y}
             }
@@ -54,18 +78,24 @@ class Sprite extends GameObject {
                 frames.loc.push({col: this.spriteWidth * i, row: idx * this.spriteHeight});
             }
             this.animations[idx].frames = frames;
+            this.animations[idx].index = idx;
         });
     }
 
     /**
-     * Update the sprite's frame index and calculate the next frame
+     * @function update
+     * @description Perform any updates to the sprite such as moving it, changing animations, drawing the next frame, etc.
+     * @memberof Sprite
      */
     update() {
         this.#draw();
     }
 
     /**
-     * Draw the sprite to the canvas
+     * @function draw
+     * @description Draw the sprite to the canvas
+     * @memberof Sprite
+     *  
      */
     #draw() {
         // Calculate when to change frames

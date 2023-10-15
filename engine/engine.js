@@ -71,12 +71,12 @@ const scene_load = async function scene_load(scene_meta) {
     //       garbage collected
     // Add all the game objects to the scene
     for (let i = 0; i < scene_meta.gameObjects.length; i++) {
-        // Check if the class has already been loaded
+        // Check if the object class has already been loaded
         if ([...Object.keys(_scene_classes)].indexOf(scene_meta.gameObjects[i].class) === -1) {
             // If not, load it
             await import(`/game/classes/${scene_meta.gameObjects[i].name}.js`)
                 .then(module => {
-                    // Add the class to the list of loaded classes
+                    // Add the class object to the list of loaded classes
                     _scene_classes[scene_meta.gameObjects[i].name] = module[scene_meta.gameObjects[i].name];
                    })
                 .catch(error => {

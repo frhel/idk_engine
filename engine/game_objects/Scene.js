@@ -17,14 +17,22 @@ class Scene {
         this.ctx = this.canvas.getContext('2d');
         this.gameObjects = [];
 
+
         this.frame = 0;
         this.time_to_frame = 0;
         this.frame_time = 0;
-        this.fps = 30;
+        this.fps = 60;
+
+       
 
         return this;
     }
 
+    /**
+     * @function add_object
+     * @description Pushes an object to the gameObjects array
+     * @param {Object} obj - The object to add to the gameObjects array
+     */
     add_object(obj) {
         this.gameObjects.push(obj);
     }
