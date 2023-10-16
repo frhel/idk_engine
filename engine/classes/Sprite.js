@@ -19,10 +19,11 @@ class Sprite extends GameObject {
         this.spriteHeight = Math.ceil(props.height / props.rows);
         this.dx = props.dx || 0;
         this.dy = props.dy || 0;
-        this.dw = this.spriteWidth;
-        this.dh = this.spriteHeight;
+
+        this.dw = this.spriteWidth / props.size;
+        this.dh = this.spriteHeight / props.size;
         
-        this.base_animation_speed = props.base_animation_speed || 5;
+        this.base_animation_speed = (props.base_animation_speed || 5);
         this.animations = props.animations;
         this.curr_animation = props.curr_animation || null;
         this.animations_list = this.animations.map((anim) => anim.name);

@@ -1,10 +1,10 @@
 import { update } from "/game/main.js";
-import { Scene } from "./game_objects/Scene.js";
+import { Scene } from "./classes/Scene.js";
 
-let _scene_classes = {Object};
 let _scene = Scene;
 let _running = 1;
 let _scenes = Object;
+let game_speed = 1;
 
 // ************************ //
 // ******* LOADING ******** //
@@ -27,7 +27,7 @@ const ready_check_interval = setInterval(async function() {
  */
 async function start_game() {
     _scenes = await scene_list_load();
-    _scene = await scene_load(_scenes.entry);
+    _scene = new Scene({..._scenes.entry, game_speed: game_speed});
     engine_loop();
 }
 
@@ -51,52 +51,6 @@ async function scene_list_load() {
             console.error("Error loading scenes.json: ", error);
         }
     );
-}
-
-/**
- * @function scene_load
- * @description Loads a scene with the given meta data
- * @param {Object} scene_meta - The meta data for the scene to load
- * @returns {Scene} A promise that resolves to a new scene
- */
-const scene_load = async function scene_load(scene_meta) {
-    // Set up the entry scene
-    const new_scene = await new Scene({
-        canvas_size: scene_meta.canvas_size
-    });
-
-
-    // TODO: Move the object loading to the Scene class so that when we destroy a scene,
-    //       we can destroy all the objects in it as well at the same time so they can be
-    //       garbage collected
-    // Add all the game objects to the scene
-    for (let i = 0; i < scene_meta.gameObjects.length; i++) {
-        // Check if the object class has already been loaded
-        if ([...Object.keys(_scene_classes)].indexOf(scene_meta.gameObjects[i].class) === -1) {
-            // If not, load it
-            await import(`/game/classes/${scene_meta.gameObjects[i].name}.js`)
-                .then(module => {
-                    // Add the class object to the list of loaded classes
-                    _scene_classes[scene_meta.gameObjects[i].name] = module[scene_meta.gameObjects[i].name];
-                   })
-                .catch(error => {
-                    console.error(`Error loading class ${scene_meta.gameObjects[i].name}: `, error);
-                }
-            );           
-        }
-
-        // Create the game object
-        const gameObject_meta = scene_meta.gameObjects[i];
-        new_scene.gameObjects[i] = await new _scene_classes[scene_meta.gameObjects[i].name]({
-            ...gameObject_meta,
-            ...{                
-                scene: new_scene,
-            }
-        });
-        new_scene.add_object(new_scene.gameObjects[i]);
-    }
-
-    return new_scene;    
 }
 
 
